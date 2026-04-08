@@ -223,6 +223,14 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+	#pista876 {
+    		animation: aparecer 0.8s ease-out;
+	}
+
+	#grinkelImg {
+    		animation: aparecer 0.8s ease-out;
+	}
+
         @keyframes brillo {
             0% { opacity: 0.5; transform: scale(0.98); }
             50% { opacity: 1; transform: scale(1.02); }
@@ -262,7 +270,7 @@
     <hr class="separador">
 
     <p class="instrucciones">Introducid el código secreto:</p>
-    <p class="pista-info">Podéis introducir el código <strong>876</strong> si necesitáis una Pequeña Pista.</p>
+
 
     <input type="number" id="codigoInput" placeholder="???" inputmode="numeric" pattern="[0-9]*"
            onkeypress="if(event.key==='Enter') verificar()">
@@ -276,11 +284,23 @@
     <div class="audio-container" id="audioContainer">
         <audio id="audioPlayer" controls preload="none"></audio>
     </div>
+<br>
+<br>
+<p id="pista876" class="pista-info" style="display:none;">
+    Podéis introducir el código <strong>876</strong> si necesitáis una Pequeña Pista.
+</p>
+
 </div>
 
 <script>
+let intentosFallidos = 0;
     function verificar() {
+	
 	const bgMusic = document.getElementById('bgMusic');
+	bgMusic.volume = 1;
+	if (bgMusic && bgMusic.paused) {
+    		bgMusic.play().catch(()=>{});
+	}
  	const grinkelImg = document.getElementById('grinkelImg');
         const pin = document.getElementById('codigoInput').value.trim();
         const resultado = document.getElementById('resultado');
@@ -299,26 +319,35 @@
 		grinkelImg.style.display = 'block';
             resultado.className = "exito";
             resultado.innerHTML = "&#10024; ¡Código correcto! </p>  Teneis acceso a nuestro almacén de artefactos. Abrid la caja que se encuentra entre las cuerdas de escalada.</p>  y escuchad mi mensaje &#10024;";
-bgMusic.pause();
-bgMusic.currentTime = 0;
+if (bgMusic) {
+    bajarMusica(bgMusic);
+}
             audioPlayer.src = audioUrl316;
             audioContainer.style.display = 'block';
-            audioPlayer.play().catch(function() {
-                // Autoplay bloqueado, el usuario puede pulsar play
-            });
+    		audioPlayer.play().catch(()=>{});
+
+		audioPlayer.onended = function() {
+    		subirMusica(bgMusic);
+		};
         } else if (pin === "876") {
             resultado.className = "pista";
             resultado.innerHTML = "&#128270; <strong>Pista de Grinkel:</strong><br>«Fijaos bien en la letra <strong>P</strong> de la imagen que tenéis. Los duendes siempre dejamos señales para quienes saben mirar.»";
+
+		document.getElementById("pista876").style.display = "none";
+		intentosFallidos = -10;
         } else if (pin === "179") {
             resultado.className = "exito";
             resultado.innerHTML = "&#10024; ¡Código aceptado! Parece que puedo confiar en vosotros &#10024;";
-bgMusic.pause();
-bgMusic.currentTime = 0;
+if (bgMusic) {
+    bajarMusica(bgMusic);
+}
             audioPlayer.src = audioUrl179;
             audioContainer.style.display = 'block';
-            audioPlayer.play().catch(function() {
-                // Autoplay bloqueado, el usuario puede pulsar play
-            });
+    		audioPlayer.play().catch(()=>{});
+
+		audioPlayer.onended = function() {
+    		subirMusica(bgMusic);
+		};
 
         } else if (pin === "001") {
     resultado.className = "exito";
@@ -336,14 +365,77 @@ bgMusic.currentTime = 0;
             resultado.className = "error";
             resultado.innerHTML = "&#9888; Código incorrecto. Los duendes de Parches & Runfield no toleramos errores, pequeño muggle.";
             document.getElementById('codigoInput').value = "";
-            setTimeout(function() { resultado.className = ""; }, 1000);
-        }
+
+
+  	  intentosFallidos++;
+
+	if (intentosFallidos === 2) {
+   	 document.getElementById("pista876").style.display = "block";
+   	 resultado.innerHTML = "🧙‍♂️ Grinkel murmura... quizás necesites ayuda...";
+	}
+
+
+   	 if (intentosFallidos >= 3) {
+     	   document.getElementById("pista876").style.display = "block";
+   	 }
+
+   	 setTimeout(function() { resultado.className = ""; }, 1000);
+	}
     }
+
+function bajarMusica(bgMusic, objetivo = 0.1) {
+    if (!bgMusic) return;
+
+    let v = bgMusic.volume;
+    const intervalo = setInterval(() => {
+        if (v > objetivo) {
+            v -= 0.05;
+            bgMusic.volume = Math.max(v, objetivo);
+        } else {
+            clearInterval(intervalo);
+        }
+    }, 100);
+}
+
+
+function subirMusica(bgMusic, objetivo = 1) {
+    if (!bgMusic) return;
+
+    let v = bgMusic.volume;
+    const intervalo = setInterval(() => {
+        if (v < objetivo) {
+            v += 0.05;
+            bgMusic.volume = Math.min(v, objetivo);
+        } else {
+            clearInterval(intervalo);
+        }
+    }, 100);
+}
+
+
+
+
+
 </script>
+
+
+
+
+
 
 <audio id="bgMusic" loop preload="auto">
     <source src="musica.mp3" type="audio/mpeg">
 </audio>
+
+<!--
+<script id="delaypista">
+window.addEventListener("load", function() {
+    setTimeout(function() {
+        document.getElementById("pista876").style.display = "block";
+    }, 10000); // 10 segundos
+});
+</script>
+-->
 
 </body>
 </html>
