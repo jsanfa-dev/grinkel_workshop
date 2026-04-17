@@ -1,64 +1,581 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grinkel Workshop</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mensaje de Grinkel</title>
     <style>
-        body, html {
-            height: 100%;
-            margin: 0;
+        @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel:wght@400;700&display=swap');
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: #0d0a07;
+            background-image:
+                radial-gradient(ellipse at 20% 50%, rgba(139, 69, 19, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 50%, rgba(139, 69, 19, 0.1) 0%, transparent 50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            padding: 16px;
+            font-family: 'MedievalSharp', 'Apple Chancery', 'Segoe Script', serif;
+        }
+
+        .pergamino {
+            background: linear-gradient(170deg, #f5e6c8 0%, #e8d5a8 30%, #dcc497 60%, #c9ad7a 100%);
+            padding: 28px 22px;
+            border-radius: 4px;
+            box-shadow:
+                0 0 60px rgba(0,0,0,0.6),
+                inset 0 0 80px rgba(139, 69, 19, 0.15),
+                0 4px 20px rgba(0,0,0,0.4);
+            border: 2px solid #8b4513;
+            text-align: center;
+            max-width: 380px;
+            width: 100%;
+            position: relative;
+        }
+
+        .pergamino::before {
+            content: "";
+            position: absolute;
+            top: -5px; bottom: -5px; left: -5px; right: -5px;
+            border: 1px solid #5d2e0a;
+            border-radius: 6px;
+            pointer-events: none;
+        }
+
+        .pergamino::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            border-radius: 4px;
+        }
+
+        .sello {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 12px;
+            border: 3px solid #8b4513;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            position: relative;
+            font-size: 2rem;
+            color: #4a2c0f;
+            background: rgba(139, 69, 19, 0.08);
+            box-shadow: inset 0 0 10px rgba(139, 69, 19, 0.2);
         }
-        #magical-background {
-            position: absolute;
+
+        .titulo {
+            font-family: 'Cinzel', 'Times New Roman', serif;
+            color: #3a1f08;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-bottom: 2px solid #8b4513;
+            padding-bottom: 8px;
+            margin-bottom: 14px;
+        }
+
+        .subtitulo {
+            font-family: 'Cinzel', serif;
+            color: #6b3a1a;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .mensaje-grinkel {
+            color: #3d200a;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 18px;
+            text-align: left;
+            padding: 0 4px;
+        }
+
+        .firma {
+            color: #5d2e0a;
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 20px;
+            text-align: right;
+            padding-right: 10px;
+        }
+
+        .separador {
+            border: none;
+            border-top: 1px solid #8b4513;
+            margin: 16px 0;
+            opacity: 0.5;
+        }
+
+        .instrucciones {
+            color: #5d2e0a;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            font-style: italic;
+        }
+
+        .pista-info {
+            color: #6b3a1a;
+            font-size: 0.78rem;
+            margin-bottom: 16px;
+            opacity: 0.85;
+            line-height: 1.4;
+        }
+
+.overlay-fondo {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 1000;
+}
+
+.overlay-text {
+    max-width: 540px;
+    color: #f4e4bc;
+    font-family: 'Cinzel', serif;
+    font-size: 1.15rem;
+    line-height: 1.6;
+    background: rgba(13, 10, 7, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 12px;
+    padding: 18px 24px;
+}
+
+        input[type="number"] {
+            background: rgba(255, 255, 255, 0.35);
+            border: 2px solid #8b4513;
+            color: #3a1f08;
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            width: 70%;
+            text-align: center;
+            padding: 10px;
+            margin: 10px 0 16px;
+            outline: none;
+            border-radius: 8px;
+            letter-spacing: 8px;
+            -moz-appearance: textfield;
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"]:focus {
+            border-color: #4a2c0f;
+            box-shadow: 0 0 10px rgba(139, 69, 19, 0.3);
+        }
+
+        button {
+            font-family: 'Cinzel', serif;
+            background: #4a2c0f;
+            color: #f4e4bc;
+            border: none;
+            padding: 14px 20px;
+            font-weight: 700;
+            cursor: pointer;
             width: 100%;
-            height: 100%;
-            background: url('path/to/your/magical-background-image.jpg') no-repeat center center / cover;
-            z-index: 1;
-            transition: opacity 1s;
+            font-size: 0.95rem;
+            border-radius: 5px;
+            box-shadow: 2px 3px 8px rgba(0,0,0,0.3);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: background 0.2s;
+            -webkit-tap-highlight-color: transparent;
         }
-        #overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            opacity: 0;
-            z-index: 2;
-            transition: opacity 1s;
+
+        button:hover, button:active {
+            background: #633c16;
         }
-        #message {
-            position: relative;
-            color: white;
-            font-size: 2em;
-            z-index: 3;
+
+        #resultado {
+            margin-top: 18px;
+            font-weight: bold;
+            min-height: 24px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .exito {
+            color: #1a6b1a;
+            animation: brillo 0.6s ease-in-out;
+        }
+
+        .pista {
+            color: #6b3a1a;
+            background: rgba(139, 69, 19, 0.08);
+            border: 1px dashed #8b4513;
+            border-radius: 6px;
+            padding: 12px;
+            animation: aparecer 0.4s ease-out;
+        }
+
+        .error {
+            color: #8b0000;
+            animation: shake 0.4s;
+        }
+
+
+.overlay-contenido {
+    text-align: center;
+}
+
+.overlay-img {
+    width: 250px;
+    max-width: 80%;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 15px rgba(255, 215, 150, 0.6));
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all 0.8s ease;
+}
+
+/* TEXTO */
+.overlay-text {
+    max-width: 540px;
+    color: #f4e4bc;
+    font-family: 'Cinzel', serif;
+    font-size: 1.15rem;
+    line-height: 1.6;
+    background: rgba(13, 10, 7, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 12px;
+    padding: 18px 24px;
+}
+
+/* ✨ EFECTO MAGICO */
+@keyframes magiaFade {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+        filter: blur(6px);
+    }
+    20% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.1);
+        filter: blur(4px);
+    }
+}
+
+@keyframes desaparecerMagia {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.1);
+        filter: blur(4px);
+    }
+}
+
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-6px); }
+            40% { transform: translateX(6px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+            100% { transform: translateX(0); }
+        }
+
+        @keyframes aparecer {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+	#pista876 {
+    		animation: aparecer 0.8s ease-out;
+	}
+
+	#grinkelImg {
+    		animation: aparecer 0.8s ease-out;
+	}
+
+        @keyframes brillo {
+            0% { opacity: 0.5; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1.02); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Reproductor de audio embebido */
+        .audio-container {
+            margin-top: 16px;
             display: none;
-            animation: fade-in 1s forwards;
         }
-        @keyframes fade-in {
-            from { opacity: 0; }
-            to { opacity: 1; }
+
+        .audio-container audio {
+            width: 100%;
+            border-radius: 8px;
         }
     </style>
 </head>
 <body>
-    <div id="magical-background"></div>
-    <div id="overlay"></div>
-    <div id="message">Your message here. This will disappear after 8 seconds.</div>
-    <script>
-        // Show the overlay and message
-        document.getElementById('overlay').style.opacity = 1;
-        document.getElementById('message').style.display = 'block';
-        setTimeout(function() {
-            document.getElementById('overlay').style.opacity = 0;
-            document.getElementById('message').style.display = 'none';
-        }, 8000); // message disappears after 8 seconds
-    </script>
+
+<div class="pergamino">
+    <div class="sello">&#9877;</div>
+
+    <div class="titulo">Parches & Runfield</div>
+    <div class="subtitulo">Taller de Artefactos de Precisión</div>
+
+    <hr class="separador">
+
+    <div class="mensaje-grinkel">
+        Estimados magos y brujas,<br><br>
+        Soy <strong>Grinkel</strong>, responsable del almacen de Artefactos Parches & Runfield. Debeis verificar vuestra identidad antes de continuar.<br><br>
+        Introducid el <strong>código numérico correcto</strong> y os revelaré el contenido de nuestro almacén. Pero tened cuidado... los duendes no tenemos paciencia con los intrusos.
+    </div>
+
+    <div class="firma">— Grinkel</div>
+
+    <hr class="separador">
+
+    <p class="instrucciones">Introducid el código secreto:</p>
+
+
+    <input type="number" id="codigoInput" placeholder="???" inputmode="numeric" pattern="[0-9]*"
+           onkeypress="if(event.key==='Enter') verificar()">
+
+    <button onclick="verificar()">Verificar Código</button>
+
+    <div id="resultado"></div>
+
+<img id="grinkelImg" src="grinke001.png" style="display:none; width:100%; margin-top:15px; border-radius:8px; box-shadow:0 0 15px rgba(0,0,0,0.5);">
+
+    <div class="audio-container" id="audioContainer">
+        <audio id="audioPlayer" controls preload="none"></audio>
+    </div>
+<br>
+<br>
+<p id="pista876" class="pista-info" style="display:none;">
+    Podéis introducir el código <strong>876</strong> si necesitáis una Pequeña Pista.
+</p>
+
+<div class="overlay-fondo" id="overlayFondo">
+    <div class="overlay-contenido">
+        <img src="imagen_fondo.png" class="overlay-img">
+        <div class="overlay-text">
+            El código que buscas no es tan evidente... <br>
+            Intenta ver la imagen en su conjunto, encuentra las casillas adecuadas. <br>
+        </div>
+    </div>
+</div>
+
+
+</div>
+
+<script>
+let intentosFallidos = 0;
+    function verificar() {
+	
+	const bgMusic = document.getElementById('bgMusic');
+	bgMusic.volume = 1;
+	if (bgMusic && bgMusic.paused) {
+    		bgMusic.play().catch(()=>{});
+	}
+ 	const grinkelImg = document.getElementById('grinkelImg');
+        const pin = document.getElementById('codigoInput').value.trim();
+        const resultado = document.getElementById('resultado');
+        const audioContainer = document.getElementById('audioContainer');
+        const audioPlayer = document.getElementById('audioPlayer');
+
+        const audioUrl316 = "ElevenLabsaudio316.mp3";
+        const audioUrl179 = "ElevenLabsaudio179.mp3";
+
+        // Ocultar audio previo
+        audioContainer.style.display = 'none';
+        audioPlayer.pause();
+	grinkelImg.style.display = 'none';
+
+        if (pin === "316") {
+		grinkelImg.style.display = 'block';
+            resultado.className = "exito";
+            resultado.innerHTML = "&#10024; ¡Código correcto! </p>  Teneis acceso a nuestro almacén de artefactos. Abrid la caja que se encuentra entre las cuerdas de escalada.</p>  y escuchad mi mensaje &#10024;";
+if (bgMusic) {
+    bajarMusica(bgMusic);
+}
+            audioPlayer.src = audioUrl316;
+            audioContainer.style.display = 'block';
+    		audioPlayer.play().catch(()=>{});
+
+		audioPlayer.onended = function() {
+    		subirMusica(bgMusic);
+		};
+        } else if (pin === "876") {
+            resultado.className = "pista";
+            resultado.innerHTML = "&#128270; <strong>Pista de Grinkel:</strong><br>«Fijaos bien en la letra <strong>P</strong> de la imagen que tenéis. Los duendes siempre dejamos señales para quienes saben mirar.»";
+
+		document.getElementById("pista876").style.display = "none";
+		intentosFallidos = -10;
+        } else if (pin === "179") {
+            resultado.className = "exito";
+            resultado.innerHTML = "&#10024; ¡Código aceptado! Parece que puedo confiar en vosotros &#10024;";
+if (bgMusic) {
+    bajarMusica(bgMusic);
+}
+            audioPlayer.src = audioUrl179;
+            audioContainer.style.display = 'block';
+    		audioPlayer.play().catch(()=>{});
+
+		audioPlayer.onended = function() {
+    		subirMusica(bgMusic);
+		};
+
+} else if (pin === "197" || pin === "781") {
+    const overlayFondo = document.getElementById('overlayFondo');
+    const codigoInput = document.getElementById('codigoInput');
+
+    const img = overlayFondo.querySelector('.overlay-img');
+    const text = overlayFondo.querySelector('.overlay-text');
+
+    // Mostrar overlay
+    overlayFondo.style.display = 'flex';
+
+    // ⏳ pequeña pausa para activar animación
+    setTimeout(() => {
+        img.style.opacity = '1';
+        img.style.transform = 'scale(1)';
+
+        text.style.opacity = '1';
+        text.style.transform = 'translateY(0)';
+    }, 50);
+
+    // 🔥 mantener visible (lectura cómoda)
+    setTimeout(() => {
+        img.style.opacity = '0';
+        img.style.transform = 'scale(1.1)';
+
+        text.style.opacity = '0';
+        text.style.transform = 'translateY(-10px)';
+    }, 4500);
+
+    // 🔚 cerrar todo
+    setTimeout(() => {
+        overlayFondo.style.display = 'none';
+
+        // reset
+        img.style.opacity = '0';
+        img.style.transform = 'scale(0.9)';
+        text.style.opacity = '0';
+        text.style.transform = 'translateY(10px)';
+
+        codigoInput.value = '';
+        codigoInput.focus();
+    }, 5500);
+
+
+        } else if (pin === "001") {
+    resultado.className = "exito";
+    resultado.innerHTML = "🎵 Música mágica activada…";
+
+    bgMusic.play().catch(() => {});
+	} else if (pin === "000") {
+    resultado.className = "pista";
+    resultado.innerHTML = "🔇 Música detenida";
+
+    bgMusic.pause();
+}
+
+	else {
+            resultado.className = "error";
+            resultado.innerHTML = "&#9888; Código incorrecto. Los duendes de Parches & Runfield no toleramos errores, pequeño muggle.";
+            document.getElementById('codigoInput').value = "";
+
+
+  	  intentosFallidos++;
+
+	if (intentosFallidos === 2) {
+   	 document.getElementById("pista876").style.display = "block";
+   	 resultado.innerHTML = "🧙‍♂️ Grinkel murmura... quizás necesites ayuda...";
+	}
+
+
+   	 if (intentosFallidos >= 3) {
+     	   document.getElementById("pista876").style.display = "block";
+   	 }
+
+   	 setTimeout(function() { resultado.className = ""; }, 1000);
+	}
+    }
+
+function bajarMusica(bgMusic, objetivo = 0.1) {
+    if (!bgMusic) return;
+
+    let v = bgMusic.volume;
+    const intervalo = setInterval(() => {
+        if (v > objetivo) {
+            v -= 0.05;
+            bgMusic.volume = Math.max(v, objetivo);
+        } else {
+            clearInterval(intervalo);
+        }
+    }, 100);
+}
+
+
+function subirMusica(bgMusic, objetivo = 1) {
+    if (!bgMusic) return;
+
+    let v = bgMusic.volume;
+    const intervalo = setInterval(() => {
+        if (v < objetivo) {
+            v += 0.05;
+            bgMusic.volume = Math.min(v, objetivo);
+        } else {
+            clearInterval(intervalo);
+        }
+    }, 100);
+}
+
+
+
+
+
+</script>
+
+
+
+
+
+
+<audio id="bgMusic" loop preload="auto">
+    <source src="musicaHP.mp3" type="audio/mpeg">
+</audio>
+
+<!--
+<script id="delaypista">
+window.addEventListener("load", function() {
+    setTimeout(function() {
+        document.getElementById("pista876").style.display = "block";
+    }, 10000); // 10 segundos
+});
+</script>
+-->
+
 </body>
 </html>
